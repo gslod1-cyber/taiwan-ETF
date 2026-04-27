@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台灣主動式ETF比較表 2026</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:          #080C18;
+    --bg-card:     #0F1526;
+    --bg-elevated: #161D33;
+    --bg-hover:    #1C2540;
+    --border:      #1E2D50;
+    --border-light: #243459;
+    --blue:        #4F8EF7;
+    --blue-dim:    #2257C8;
+    --blue-glow:   rgba(79,142,247,0.15);
+    --green:       #1FC98E;
+    --green-dim:   rgba(31,201,142,0.12);
+    --red:         #F75555;
+    --red-dim:     rgba(247,85,85,0.12);
+    --yellow:      #F7B955;
+    --yellow-dim:  rgba(247,185,85,0.12);
+    --purple:      #9B7AFF;
+    --text-1:      #E8EEFF;
+    --text-2:      #8896B3;
+    --text-3:      #5A6680;
+    --rank-gold:   #F7B955;
+    --rank-silver: #9BAAC4;
+    --rank-bronze: #CD7F45;
+    --radius-sm:   6px;
+    --radius-md:   10px;
+    --radius-lg:   16px;
+    --shadow-card: 0 4px 24px rgba(0,0,0,0.4);
+    --font-num:    'Inter', 'SF Mono', 'Consolas', monospace;
+    --font-main:   'Noto Sans TC', 'PingFang TC', 'Microsoft JhengHei', sans-serif;
+  }
+  html { font-size: 16px; }
+  body { background: var(--bg); color: var(--text-1); font-family: var(--font-main); line-height: 1.5; min-height: 100vh; }
+  button { cursor: pointer; font-family: var(--font-main); }
+  .container { max-width: 1700px; margin: 0 auto; padding: 0 20px; }
+
+  /* Header */
+  .header { background: linear-gradient(135deg,#0A1024 0%,#0F1A38 60%,#0D1530 100%); border-bottom: 1px solid var(--border); padding: 20px 0 0; position: sticky; top: 0; z-index: 100; }
+  .header-inner { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+  .logo-icon { width:40px; height:40px; background:linear-gradient(135deg,var(--blue),var(--purple)); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; box-shadow:0 0 20px var(--blue-glow); }
+  .header-title { display:flex; align-items:center; gap:12px; }
+  .header h1 { font-size:1.4rem; font-weight:700; color:var(--text-1); letter-spacing:-0.01em; }
+  .header h1 span { color:var(--blue); }
+  .header-meta { font-size:0.75rem; color:var(--text-3); margin-top:2px; }
+  .header-right { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+  .badge-warn { background:var(--yellow-dim); color:var(--yellow); border:1px solid rgba(247,185,85,0.3); font-size:0.7rem; font-weight:600; padding:4px 10px; border-radius:99px; letter-spacing:0.05em; }
+  .badge-date { background:var(--bg-elevated); color:var(--text-2); border:1px solid var(--border); font-size:0.72rem; padding:4px 10px; border-radius:99px; font-family:var(--font-num); }
+  .header-tabs { display:flex; gap:2px; margin-top:16px; border-top:1px solid var(--border); overflow-x:auto; scrollbar-width:none; }
+  .header-tabs::-webkit-scrollbar { display:none; }
+  .tab-btn { background:none; border:none; color:var(--text-3); font-size:0.82rem; font-weight:500; padding:10px 16px; border-bottom:2px solid transparent; white-space:nowrap; transition:all 0.15s; }
+  .tab-btn:hover { color:var(--text-2); }
+  .tab-btn.active { color:var(--blue); border-bottom-color:var(--blue); }
+
+  /* Disclaimer */
+  .disclaimer-bar { background:rgba(247,185,85,0.07); border-bottom:1px solid rgba(247,185,85,0.2); padding:8px 0; }
+  .disclaimer-bar .container { display:flex; align-items:flex-start; gap:8px; font-size:0.73rem; color:var(--yellow); line-height:1.6; }
+
+  /* Stats */
+  .stats-section { padding:24px 0 16px; }
+  .stats-grid { display:grid; grid-template-columns:repeat(5,1fr); gap:12px; }
+  @media(max-width:1100px){ .stats-grid { grid-template-columns:repeat(3,1fr); } }
+  @media(max-width:640px){ .stats-grid { grid-template-columns:repeat(2,1fr); gap:8px; } }
+  .stat-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:16px 18px; position:relative; overflow:hidden; transition:border-color 0.15s,background 0.15s; }
+  .stat-card::before { content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+  .stat-card.blue::before   { background:linear-gradient(90deg,var(--blue),var(--purple)); }
+  .stat-card.green::before  { background:linear-gradient(90deg,var(--green),#0EB87A); }
+  .stat-card.yellow::before { background:linear-gradient(90deg,var(--yellow),#F7895B); }
+  .stat-card.purple::before { background:linear-gradient(90deg,var(--purple),var(--blue)); }
+  .stat-card.red::before    { background:linear-gradient(90deg,var(--red),#F7895B); }
+  .stat-card:hover { border-color:var(--border-light); background:var(--bg-elevated); }
+  .stat-label { font-size:0.7rem; color:var(--text-3); text-transform:uppercase; letter-spacing:0.06em; font-weight:600; margin-bottom:6px; }
+  .stat-value { font-family:var(--font-num); font-size:1.5rem; font-weight:700; letter-spacing:-0.02em; }
+  .stat-value.blue   { color:var(--blue); }
+  .stat-value.green  { color:var(--green); }
+  .stat-value.yellow { color:var(--yellow); }
+  .stat-value.purple { color:var(--purple); }
+  .stat-value.red    { color:var(--red); }
+  .stat-sub { font-size:0.68rem; color:var(--text-3); margin-top:4px; line-height:1.4; }
+
+  /* Controls */
+  .controls-bar { display:flex; align-items:center; gap:10px; padding:12px 0 14px; flex-wrap:wrap; }
+  .filter-group { display:flex; gap:4px; flex-wrap:wrap; }
+  .filter-btn { background:var(--bg-card); border:1px solid var(--border); color:var(--text-2); font-size:0.76rem; font-weight:500; padding:6px 13px; border-radius:99px; transition:all 0.15s; white-space:nowrap; }
+  .filter-btn:hover { border-color:var(--blue); color:var(--blue); }
+  .filter-btn.active { background:var(--blue-glow); border-color:var(--blue); color:var(--blue); }
+  .controls-right { margin-left:auto; display:flex; gap:8px; align-items:center; }
+  .sort-select { background:var(--bg-card); border:1px solid var(--border); color:var(--text-1); font-size:0.76rem; padding:6px 10px; border-radius:var(--radius-sm); outline:none; cursor:pointer; }
+  .sort-select:focus { border-color:var(--blue); }
+  .etf-count { font-size:0.73rem; color:var(--text-3); }
+  .etf-count strong { color:var(--text-2); font-family:var(--font-num); }
+
+  /* Table */
+  .table-section { padding-bottom:24px; }
+  .table-wrap { overflow-x:auto; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--bg-card); box-shadow:var(--shadow-card); scrollbar-width:thin; scrollbar-color:var(--border) transparent; }
+  .table-wrap::-webkit-scrollbar { height:6px; }
+  .table-wrap::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+  table { width:100%; border-collapse:collapse; font-size:0.8rem; white-space:nowrap; }
+  thead { position:sticky; top:0; z-index:5; }
+  thead tr { background:var(--bg-elevated); }
+  th { padding:10px 12px; text-align:left; font-weight:600; font-size:0.67rem; color:var(--text-2); text-transform:uppercase; letter-spacing:0.05em; border-bottom:1px solid var(--border); }
+  th.sortable { cursor:pointer; user-select:none; }
+  th.sortable:hover { color:var(--blue); }
+  th.sorted { color:var(--blue); }
+  th .sa { margin-left:3px; opacity:0.5; font-size:0.6rem; }
+  th.sorted .sa { opacity:1; }
+  th.num, td.num { text-align:right; font-family:var(--font-num); }
+  th.ctr, td.ctr { text-align:center; }
+  tbody tr { border-bottom:1px solid var(--border); transition:background 0.1s; }
+  tbody tr:last-child { border-bottom:none; }
+  tbody tr:hover { background:var(--bg-hover); }
+  td { padding:11px 12px; vertical-align:middle; color:var(--text-1); }
+
+  /* Table cells */
+  .td-code { font-family:var(--font-num); font-weight:700; font-size:0.88rem; color:var(--blue); }
+  .td-code .sfx { font-size:0.7rem; color:var(--purple); font-weight:600; }
+  .td-name { font-weight:500; min-width:120px; }
+  .td-sub { font-size:0.67rem; color:var(--text-3); margin-top:2px; }
+  .td-muted { color:var(--text-2); font-size:0.77rem; }
+  .td-na { color:var(--text-3); font-size:0.72rem; }
+
+  /* Badges */
+  .div-badge { display:inline-flex; align-items:center; gap:4px; font-size:0.68rem; font-weight:600; padding:3px 8px; border-radius:99px; }
+  .div-badge.yes { background:var(--green-dim); color:var(--green); }
+  .div-badge.no  { background:rgba(90,102,128,0.1); color:var(--text-3); }
+  .freq-badge { display:inline-block; font-size:0.65rem; font-weight:600; padding:2px 7px; border-radius:4px; margin-top:3px; }
+  .freq-badge.q  { background:var(--blue-glow); color:var(--blue); }
+  .freq-badge.y  { background:rgba(155,122,255,0.1); color:var(--purple); }
+  .freq-badge.h  { background:var(--green-dim); color:var(--green); }
+  .freq-badge.m  { background:var(--yellow-dim); color:var(--yellow); }
+  .type-badge { font-size:0.65rem; font-weight:600; padding:2px 8px; border-radius:4px; }
+  .type-badge.tw    { background:var(--blue-glow); color:var(--blue); }
+  .type-badge.hi    { background:var(--green-dim); color:var(--green); }
+  .type-badge.gl    { background:rgba(155,122,255,0.1); color:var(--purple); }
+  .type-badge.bd    { background:var(--yellow-dim); color:var(--yellow); }
+  .months-wrap { display:flex; gap:2px; flex-wrap:wrap; min-width:60px; }
+  .month-chip { font-size:0.63rem; font-family:var(--font-num); font-weight:600; color:var(--blue); background:var(--blue-glow); border:1px solid rgba(79,142,247,0.2); border-radius:4px; padding:1px 5px; }
+
+  /* Return cells */
+  .ret { font-family:var(--font-num); font-weight:600; font-size:0.86rem; }
+  .ret.pos { color:var(--green); }
+  .ret.neg { color:var(--red); }
+  .ret.neu { color:var(--text-3); font-size:0.72rem; }
+  .yield-val { font-family:var(--font-num); font-weight:700; font-size:0.9rem; color:var(--green); }
+
+  /* Rank badge */
+  .rank-badge { display:inline-flex; align-items:center; justify-content:center; width:26px; height:26px; border-radius:50%; font-family:var(--font-num); font-size:0.72rem; font-weight:700; border:2px solid; }
+  .rank-badge.r1 { color:#1A1A0A; background:var(--rank-gold); border-color:#E8A800; }
+  .rank-badge.r2 { color:#0F1A1A; background:var(--rank-silver); border-color:#8A9EBC; }
+  .rank-badge.r3 { color:#1A0F0A; background:var(--rank-bronze); border-color:#B86A30; }
+  .rank-badge.rn { color:var(--text-2); background:var(--bg-elevated); border-color:var(--border); font-size:0.65rem; }
+
+  /* Section separator */
+  .sec-title { font-size:0.68rem; color:var(--yellow); font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:8px 12px; background:rgba(247,185,85,0.06); border-bottom:1px solid var(--border); }
+
+  /* Group header row */
+  .th-group th { background:rgba(79,142,247,0.05); color:var(--blue); font-size:0.6rem; font-weight:700; letter-spacing:0.08em; padding:5px 10px; border-bottom:1px solid var(--border); }
+
+  /* Rankings section */
+  .rank-section { padding-bottom:24px; }
+  .rank-section h2, .reco-section h2 { font-size:1.05rem; font-weight:700; color:var(--text-1); margin-bottom:14px; display:flex; align-items:center; gap:8px; }
+  .h2-dot { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+  .rank-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  @media(max-width:900px){ .rank-grid { grid-template-columns:repeat(2,1fr); } }
+  @media(max-width:560px){ .rank-grid { grid-template-columns:1fr; } }
+  .rank-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-md); padding:14px 16px; }
+  .rank-card-title { font-size:0.7rem; color:var(--text-3); font-weight:600; text-transform:uppercase; letter-spacing:0.06em; margin-bottom:10px; }
+  .rank-row { display:flex; align-items:center; justify-content:space-between; padding:5px 0; border-bottom:1px solid rgba(30,45,80,0.5); }
+  .rank-row:last-child { border-bottom:none; }
+  .rank-row-left { display:flex; align-items:center; gap:8px; }
+  .rank-num { width:18px; font-family:var(--font-num); font-size:0.7rem; font-weight:700; text-align:center; flex-shrink:0; }
+  .rank-num.n1 { color:var(--rank-gold); }
+  .rank-num.n2 { color:var(--rank-silver); }
+  .rank-num.n3 { color:var(--rank-bronze); }
+  .rank-num.nx { color:var(--text-3); }
+  .rank-code { font-family:var(--font-num); font-size:0.7rem; color:var(--blue); font-weight:700; }
+  .rank-name { font-size:0.73rem; color:var(--text-2); }
+  .rank-val { font-family:var(--font-num); font-size:0.78rem; font-weight:700; }
+  .rank-val.g { color:var(--green); }
+  .rank-val.r { color:var(--red); }
+  .rank-val.na { color:var(--text-3); font-size:0.68rem; }
+
+  /* Reco section */
+  .reco-section { padding-bottom:40px; }
+  .reco-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media(max-width:720px){ .reco-grid { grid-template-columns:1fr; } }
+  .reco-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:20px 22px; position:relative; overflow:hidden; }
+  .reco-card::before { content:''; position:absolute; top:0; left:0; bottom:0; width:3px; }
+  .reco-card.dca::before  { background:linear-gradient(180deg,var(--blue),var(--purple)); }
+  .reco-card.lump::before { background:linear-gradient(180deg,var(--green),#0EB87A); }
+  .reco-header { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+  .reco-icon { width:34px; height:34px; border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+  .reco-card.dca  .reco-icon { background:var(--blue-glow); }
+  .reco-card.lump .reco-icon { background:var(--green-dim); }
+  .reco-title { font-size:0.96rem; font-weight:700; color:var(--text-1); }
+  .reco-sub   { font-size:0.7rem; color:var(--text-3); margin-top:1px; }
+  .reco-list  { display:flex; flex-direction:column; gap:8px; }
+  .reco-item  { display:flex; align-items:center; gap:10px; background:var(--bg-elevated); border:1px solid var(--border); border-radius:var(--radius-md); padding:10px 12px; }
+  .reco-pri { width:20px; height:20px; border-radius:50%; font-size:0.62rem; font-weight:700; display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--font-num); color:#fff; }
+  .reco-card.dca  .reco-pri { background:var(--blue-dim); }
+  .reco-card.lump .reco-pri { background:#0C8A62; }
+  .reco-info { flex:1; min-width:0; }
+  .reco-c { font-family:var(--font-num); font-weight:700; font-size:0.82rem; color:var(--blue); }
+  .reco-n { font-size:0.8rem; font-weight:500; color:var(--text-1); }
+  .reco-r { font-size:0.68rem; color:var(--text-3); margin-top:2px; line-height:1.4; }
+  .reco-stat { text-align:right; flex-shrink:0; }
+  .reco-stat .big { font-family:var(--font-num); font-weight:700; font-size:0.9rem; }
+  .reco-stat .big.g { color:var(--green); }
+  .reco-stat .big.b { color:var(--blue); }
+  .reco-stat .lbl { font-size:0.6rem; color:var(--text-3); }
+  .insight { margin-top:12px; background:var(--blue-glow); border:1px solid rgba(79,142,247,0.2); border-radius:var(--radius-md); padding:10px 12px; font-size:0.73rem; color:var(--text-2); line-height:1.6; }
+  .reco-card.lump .insight { background:rgba(31,201,142,0.06); border-color:rgba(31,201,142,0.18); }
+  .insight strong { color:var(--text-1); }
+
+  /* Divider */
+  .divider { border:none; border-top:1px solid var(--border); margin:8px 0 24px; }
+
+  /* Footer */
+  .footer { border-top:1px solid var(--border); background:var(--bg-card); padding:20px 0; }
+  .footer-inner { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; flex-wrap:wrap; }
+  .footer-txt { font-size:0.7rem; color:var(--text-3); max-width:700px; line-height:1.8; }
+  .footer-txt strong { color:var(--text-2); }
+  .footer-links { display:flex; gap:14px; font-size:0.7rem; flex-shrink:0; }
+  .footer-links a { color:var(--text-3); text-decoration:none; }
+  .footer-links a:hover { color:var(--blue); }
+
+  @keyframes fadeIn { from{opacity:0;transform:translateY(5px)} to{opacity:1;transform:translateY(0)} }
+  .stat-card { animation:fadeIn 0.2s ease both; }
+  .stat-card:nth-child(1){animation-delay:0.04s} .stat-card:nth-child(2){animation-delay:0.08s}
+  .stat-card:nth-child(3){animation-delay:0.12s} .stat-card:nth-child(4){animation-delay:0.16s}
+  .stat-card:nth-child(5){animation-delay:0.2s}
+  @media(prefers-reduced-motion:reduce){ *{animation:none!important;transition:none!important} }
+  ::-webkit-scrollbar{width:6px} ::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+  @media(max-width:640px){ .container{padding:0 12px} .header h1{font-size:1.1rem} }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="container">
+    <div class="header-inner">
+      <div class="header-title">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
+        </div>
+        <div>
+          <h1>台灣<span>主動式ETF</span>比較表</h1>
+          <div class="header-meta">Taiwan Active ETF Comparison &nbsp;·&nbsp; 資料來源：TWSE、今周刊、旺得富 &nbsp;·&nbsp; 2026/04/27</div>
+        </div>
+      </div>
+      <div class="header-right">
+        <span class="badge-warn">⚠ 部分資料待確認</span>
+        <span class="badge-date">2026 / 04 / 27</span>
+      </div>
+    </div>
+    <nav class="header-tabs">
+      <button class="tab-btn active" onclick="showTab('table')">比較總表</button>
+      <button class="tab-btn" onclick="showTab('rank')">績效排名</button>
+      <button class="tab-btn" onclick="showTab('reco')">投資建議</button>
+    </nav>
+  </div>
+</header>
+
+<!-- DISCLAIMER -->
+<div class="disclaimer-bar">
+  <div class="container">
+    <span>⚠&nbsp;</span>
+    <span>績效數據來源：今周刊、旺得富（2026/04）；配息月份與殖利率部分待各投信官網確認。基金經理人資訊請至各投信公司查詢。<strong>本表不構成投資建議，投資有風險，請詳閱公開說明書。</strong></span>
+  </div>
+</div>
+
+<main>
+<div class="container">
+
+<!-- STATS -->
+<section class="stats-section">
+  <div class="stats-grid">
+    <div class="stat-card blue">
+      <div class="stat-label">台股主動式ETF</div>
+      <div class="stat-value blue" id="totalStkCount">13</div>
+      <div class="stat-sub">已掛牌上市（股票型）</div>
+    </div>
+    <div class="stat-card yellow">
+      <div class="stat-label">債券主動式ETF</div>
+      <div class="stat-value yellow">4</div>
+      <div class="stat-sub">已掛牌上市（債券型）</div>
+    </div>
+    <div class="stat-card green">
+      <div class="stat-label">今年最佳績效</div>
+      <div class="stat-value green">+48.61%</div>
+      <div class="stat-sub">00988A 主動統一全球創新</div>
+    </div>
+    <div class="stat-card purple">
+      <div class="stat-label">4月最佳單月</div>
+      <div class="stat-value purple">+20.32%</div>
+      <div class="stat-sub">00988A 主動統一全球創新</div>
+    </div>
+    <div class="stat-card red">
+      <div class="stat-label">最高年化配息率</div>
+      <div class="stat-value red">8.03%</div>
+      <div class="stat-sub">00982A 主動群益台灣強棒</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" id="table-anchor">
+
+<!-- CONTROLS -->
+<div class="controls-bar">
+  <div class="filter-group">
+    <button class="filter-btn active" onclick="applyFilter('all',this)">全部</button>
+    <button class="filter-btn" onclick="applyFilter('tw',this)">台灣股票型</button>
+    <button class="filter-btn" onclick="applyFilter('hi',this)">高息型</button>
+    <button class="filter-btn" onclick="applyFilter('gl',this)">全球/海外型</button>
+    <button class="filter-btn" onclick="applyFilter('bd',this)">債券型</button>
+    <button class="filter-btn" onclick="applyFilter('div',this)">有配息</button>
+    <button class="filter-btn" onclick="applyFilter('q',this)">季配息</button>
+    <button class="filter-btn" onclick="applyFilter('y',this)">年配息</button>
+  </div>
+  <div class="controls-right">
+    <span class="etf-count">顯示 <strong id="shownCount">17</strong> / 17 檔</span>
+    <select class="sort-select" onchange="applySortSel(this.value)">
+      <option value="code">代號排序</option>
+      <option value="ytd">今年績效↓</option>
+      <option value="m1this">4月績效↓</option>
+      <option value="yield">殖利率↓</option>
+    </select>
+  </div>
+</div>
+
+<!-- TABLE -->
+<section class="table-section" id="table-section">
+  <div class="table-wrap" role="region" tabindex="0" aria-label="主動式ETF比較表">
+    <table id="mainTable">
+      <thead>
+        <tr class="th-group">
+          <th colspan="6" style="text-align:left">基本資料</th>
+          <th colspan="3" style="text-align:center;border-left:1px solid var(--border)">配息資訊</th>
+          <th colspan="2" style="text-align:center;border-left:1px solid var(--border)">本月排名</th>
+          <th colspan="5" style="text-align:center;border-left:1px solid var(--border)">績效表現（實際數據標 ★，其餘待確認）</th>
+        </tr>
+        <tr>
+          <th class="sortable sorted" onclick="sortCol('code',this)">代號<span class="sa">↑</span></th>
+          <th>ETF名稱</th>
+          <th>投信公司</th>
+          <th>基金經理人</th>
+          <th class="ctr">類型</th>
+          <th class="ctr">投資地區</th>
+          <th class="ctr" style="border-left:1px solid var(--border)">配息</th>
+          <th class="ctr">頻率</th>
+          <th class="ctr">配息月</th>
+          <th class="ctr sortable" onclick="sortCol('rankThis',this)" style="border-left:1px solid var(--border)">4月排名<span class="sa">↕</span></th>
+          <th class="ctr sortable" onclick="sortCol('rankYTD',this)">今年排名<span class="sa">↕</span></th>
+          <th class="num sortable" onclick="sortCol('m1this',this)" style="border-left:1px solid var(--border)">4月績效<span class="sa">↕</span></th>
+          <th class="num sortable" onclick="sortCol('ytd',this)">今年以來<span class="sa">↕</span></th>
+          <th class="num sortable" onclick="sortCol('m3',this)">近3月<span class="sa">↕</span></th>
+          <th class="num sortable" onclick="sortCol('yield',this)">殖利率<span class="sa">↕</span></th>
+          <th class="num sortable" onclick="sortCol('aum',this)">規模(億)<span class="sa">↕</span></th>
+        </tr>
+      </thead>
+      <tbody id="mainTbody"></tbody>
+    </table>
+  </div>
+</section>
+
+<hr class="divider" id="rank-anchor">
+
+<!-- RANKING -->
+<section class="rank-section" id="rank-section">
+  <h2>
+    <span class="h2-dot" style="background:linear-gradient(135deg,var(--yellow),var(--red))"></span>
+    績效排名總覽 <small style="font-size:0.7rem;color:var(--text-3);font-weight:400;margin-left:6px;">★ 為已確認實際數據</small>
+  </h2>
+  <div class="rank-grid">
+    <div class="rank-card"><div class="rank-card-title">4月績效排名 ★</div><div id="r-m1this"></div></div>
+    <div class="rank-card"><div class="rank-card-title">今年以來績效排名 ★</div><div id="r-ytd"></div></div>
+    <div class="rank-card"><div class="rank-card-title">近3月績效排名 ★</div><div id="r-m3"></div></div>
+    <div class="rank-card"><div class="rank-card-title">殖利率排名（有配息）★</div><div id="r-yield"></div></div>
+    <div class="rank-card"><div class="rank-card-title">規模排名（億元）★</div><div id="r-aum"></div></div>
+    <div class="rank-card" style="background:rgba(247,185,85,0.04);border-color:rgba(247,185,85,0.2);">
+      <div class="rank-card-title" style="color:var(--yellow)">月月配息組合參考</div>
+      <div style="font-size:0.75rem;color:var(--text-2);line-height:1.8;padding-top:4px;">
+        <div style="margin-bottom:6px;color:var(--text-3);font-size:0.68rem;">以下三檔組合可接近月月領息</div>
+        <div>📌 <strong style="color:var(--blue)">00981A</strong> 年配 + <strong style="color:var(--blue)">00982A</strong> 季配 + <strong style="color:var(--blue)">00992A</strong> 季配</div>
+        <div style="font-size:0.68rem;color:var(--text-3);margin-top:6px;">※ 實際配息月份請至各投信官網確認，配息不保證</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" id="reco-anchor">
+
+<!-- RECOMMENDATION -->
+<section class="reco-section" id="reco-section">
+  <h2>
+    <span class="h2-dot" style="background:linear-gradient(135deg,var(--green),#0EB87A)"></span>
+    投資策略建議
+  </h2>
+  <div class="reco-grid">
+
+    <!-- DCA -->
+    <div class="reco-card dca">
+      <div class="reco-header">
+        <div class="reco-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2.2"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>
+        </div>
+        <div>
+          <div class="reco-title">定期定額推薦</div>
+          <div class="reco-sub">Dollar-Cost Averaging｜長期累積、攤平波動</div>
+        </div>
+      </div>
+      <div class="reco-list">
+        <div class="reco-item">
+          <div class="reco-pri">1</div>
+          <div class="reco-info">
+            <div class="reco-c">00988A</div>
+            <div class="reco-n">主動統一全球創新</div>
+            <div class="reco-r">今年以來 +48.61%，全球科技布局，波動大適合定期攤平進場成本</div>
+          </div>
+          <div class="reco-stat"><div class="big g">+48.61%</div><div class="lbl">今年以來</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri">2</div>
+          <div class="reco-info">
+            <div class="reco-c">00992A</div>
+            <div class="reco-n">主動群益科技創新</div>
+            <div class="reco-r">今年 +42.95%、4月 +19.38%，AI/半導體主題，季配息定期領回</div>
+          </div>
+          <div class="reco-stat"><div class="big g">+42.95%</div><div class="lbl">今年以來</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri">3</div>
+          <div class="reco-info">
+            <div class="reco-c">00981A</div>
+            <div class="reco-n">主動統一台股增長</div>
+            <div class="reco-r">規模最大（逾1800億），今年 +36.78%，AI硬體/人形機器人/低軌衛星</div>
+          </div>
+          <div class="reco-stat"><div class="big g">+36.78%</div><div class="lbl">今年以來</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri">4</div>
+          <div class="reco-info">
+            <div class="reco-c">00987A</div>
+            <div class="reco-n">主動台新優勢成長</div>
+            <div class="reco-r">今年 +38.08%，台灣成長股，年配息，適合長期資本增值</div>
+          </div>
+          <div class="reco-stat"><div class="big g">+38.08%</div><div class="lbl">今年以來</div></div>
+        </div>
+      </div>
+      <div class="insight">
+        <strong>策略說明：</strong>定期定額適合<strong>波動較大、長期向上</strong>的成長型ETF。AI/科技主題ETF短期波動高，每月固定扣款能有效攤平成本。建議<strong>每月固定日</strong>扣款，不試圖擇時，持有3年以上效果最佳。
+      </div>
+    </div>
+
+    <!-- Lump Sum -->
+    <div class="reco-card lump">
+      <div class="reco-header">
+        <div class="reco-icon">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="2.2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </div>
+        <div>
+          <div class="reco-title">單筆申購推薦</div>
+          <div class="reco-sub">Lump Sum Investment｜鎖定配息 / 核心部位</div>
+        </div>
+      </div>
+      <div class="reco-list">
+        <div class="reco-item">
+          <div class="reco-pri" style="background:#0C8A62;">1</div>
+          <div class="reco-info">
+            <div class="reco-c">00982A</div>
+            <div class="reco-n">主動群益台灣強棒</div>
+            <div class="reco-r">年化配息率 8.03% 最高，季配息，單筆進場可鎖定高息收益</div>
+          </div>
+          <div class="reco-stat"><div class="big g">8.03%</div><div class="lbl">年化配息率</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri" style="background:#0C8A62;">2</div>
+          <div class="reco-info">
+            <div class="reco-c">00984A</div>
+            <div class="reco-n">主動安聯台灣高息成長</div>
+            <div class="reco-r">殖利率5~6%，高息打底+成長加值，季配息，兼顧配息與資本成長</div>
+          </div>
+          <div class="reco-stat"><div class="big g">5~6%</div><div class="lbl">殖利率</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri" style="background:#0C8A62;">3</div>
+          <div class="reco-info">
+            <div class="reco-c">00994A</div>
+            <div class="reco-n">主動第一金台股優</div>
+            <div class="reco-r">4月 +19.91% 績效第2名，今年 +40.9%，季配息，近期強勢</div>
+          </div>
+          <div class="reco-stat"><div class="big g">+40.9%</div><div class="lbl">今年以來</div></div>
+        </div>
+        <div class="reco-item">
+          <div class="reco-pri" style="background:#0C8A62;">4</div>
+          <div class="reco-info">
+            <div class="reco-c">00980A</div>
+            <div class="reco-n">主動野村臺灣優選</div>
+            <div class="reco-r">首批掛牌、規模穩健，量化模型+人工優化，季配息，核心部位適合</div>
+          </div>
+          <div class="reco-stat"><div class="big b">季配</div><div class="lbl">配息頻率</div></div>
+        </div>
+      </div>
+      <div class="insight">
+        <strong>策略說明：</strong>單筆申購建議優先選 ①<strong>高殖利率ETF</strong>（鎖定配息收益）②<strong>近期強勢ETF</strong>（趨勢跟蹤）③<strong>均衡型ETF</strong>作為核心部位。科技主題建議分3批進場，每批間隔1~2月，降低單次進場風險。
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</div>
+</main>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-txt">
+        <strong>資料來源：</strong>台灣證券交易所（TWSE）、今周刊、旺得富理財網、Yahoo奇摩財經（2026/04）。<strong>免責聲明：</strong>本表格資料僅供參考，配息月份與基金經理人資訊請至各投信官網確認。過去績效不代表未來收益。「★」標示為已確認實際數據，其餘欄位待更新。
+      </div>
+      <div class="footer-links">
+        <a href="https://www.twse.com.tw/zh/products/securities/etf/products/active-list.html" target="_blank">TWSE 主動式ETF</a>
+        <a href="https://www.twse.com.tw/zh/ETFortune/dividendCalendar" target="_blank">配息行事曆</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ===== DATA ===== */
+/* 績效來源：今周刊2026/04/13、2026/04/11；旺得富2026/04/15；esunsec 2025/08 */
+/* ★ = 已確認實際數據 | null = 待確認 */
+const DATA = [
+  /* ─── 股票型（A 後綴） ─── */
+  {
+    code:"00980A", name:"主動野村臺灣優選",   co:"野村投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"q",  months:[3,6,9,12],
+    yield:null,   aum:41.0,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:21.28, note:"量化+人工優化，聚焦AI出口大型股"
+  },
+  {
+    code:"00981A", name:"主動統一台股增長",   co:"統一投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"y",  months:[12],
+    yield:null,   aum:1800,  rankThis:4,   rankYTD:6,
+    m1this:14.39, ytd:36.78, m3:34.31, note:"AI硬體/人形機器人/低軌衛星，規模最大"
+  },
+  {
+    code:"00982A", name:"主動群益台灣強棒",   co:"群益投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"q",  months:[1,4,7,10],
+    yield:8.03,   aum:157.1, rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:27.23, note:"年化配息率8.03%，中小型成長股"
+  },
+  {
+    code:"00983A", name:"主動中信ARK創新",   co:"中信投信",  mgr:"─",
+    cat:"gl", hasDividend:true,  freq:"y",  months:[12],
+    yield:null,   aum:21.0,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"方舟投資ARK顧問，顛覆式創新五大主題"
+  },
+  {
+    code:"00984A", name:"主動安聯台灣高息成長", co:"安聯投信", mgr:"─",
+    cat:"hi", hasDividend:true,  freq:"q",  months:[3,6,9,12],
+    yield:5.5,    aum:18.3,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"六成高息+四成成長，殖利率5~6%"
+  },
+  {
+    code:"00985A", name:"主動野村台灣50增強", co:"野村投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"y",  months:[12],
+    yield:null,   aum:39.3,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"對標台灣50，選股擴至市值前150大"
+  },
+  {
+    code:"00986A", name:"主動台新龍頭成長",   co:"台新投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"y",  months:[12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"世界級龍頭企業，前瞻性挖掘成長趨勢"
+  },
+  {
+    code:"00987A", name:"主動台新優勢成長",   co:"台新投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"y",  months:[12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:3,
+    m1this:null,  ytd:38.08, m3:null, note:"2025/12掛牌，今年 +38.08%"
+  },
+  {
+    code:"00988A", name:"主動統一全球創新",   co:"統一投信",  mgr:"陳意婷",
+    cat:"gl", hasDividend:null,  freq:null, months:[],
+    yield:null,   aum:null,  rankThis:1,   rankYTD:1,
+    m1this:20.32, ytd:48.61, m3:null, note:"全球創新六大領域，今年最強 +48.61%"
+  },
+  {
+    code:"00989A", name:"主動摩根美國科技",   co:"摩根投信",  mgr:"─",
+    cat:"gl", hasDividend:null,  freq:null, months:[],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"美國科技產業，七大創新趨勢"
+  },
+  {
+    code:"00990A", name:"主動元大AI新經濟",   co:"元大投信",  mgr:"─",
+    cat:"tw", hasDividend:null,  freq:null, months:[],
+    yield:null,   aum:null,  rankThis:null, rankYTD:4,
+    m1this:null,  ytd:37.22, m3:null, note:"AI新經濟主題，今年 +37.22%"
+  },
+  {
+    code:"00991A", name:"主動復華未來50",     co:"復華投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"h",  months:[6,12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:32.66, m3:null, note:"市值前150大精選50檔，半年配"
+  },
+  {
+    code:"00992A", name:"主動群益科技創新",   co:"群益投信",  mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"q",  months:[2,5,8,11],
+    yield:null,   aum:null,  rankThis:3,   rankYTD:2,
+    m1this:19.38, ytd:42.95, m3:null, note:"AI伺服器/先進半導體供應鏈，季配息"
+  },
+  {
+    code:"00993A", name:"主動安聯台灣",       co:"安聯投信",  mgr:"─",
+    cat:"tw", hasDividend:null,  freq:null, months:[],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"質化研究+量化模型雙重篩選"
+  },
+  {
+    code:"00994A", name:"主動第一金台股優",   co:"第一金投信", mgr:"─",
+    cat:"tw", hasDividend:true,  freq:"q",  months:[3,6,9,12],
+    yield:null,   aum:null,  rankThis:2,   rankYTD:3,
+    m1this:19.91, ytd:40.9,  m3:null, note:"9大因子月度評分，4月績效第2名"
+  },
+  {
+    code:"00995A", name:"主動中信台灣卓越",   co:"中信投信",  mgr:"─",
+    cat:"tw", hasDividend:null,  freq:null, months:[],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:33.0,  m3:null, note:"今年約 +33%"
+  },
+  /* ─── 債券型（D 後綴） ─── */
+  {
+    code:"00980D", name:"主動聯博投等入息",   co:"聯博投信",  mgr:"─",
+    cat:"bd", hasDividend:true,  freq:"m",  months:[1,2,3,4,5,6,7,8,9,10,11,12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"AI債券投資平台，投資等級美元債"
+  },
+  {
+    code:"00981D", name:"主動中信非投等債",   co:"中信投信",  mgr:"─",
+    cat:"bd", hasDividend:true,  freq:"m",  months:[1,2,3,4,5,6,7,8,9,10,11,12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"非投資級債，動態調整資產配置"
+  },
+  {
+    code:"00982D", name:"主動富邦動態入息",   co:"富邦投信",  mgr:"─",
+    cat:"bd", hasDividend:true,  freq:"m",  months:[1,2,3,4,5,6,7,8,9,10,11,12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"100%投資等級美元公司債，雙率避險"
+  },
+  {
+    code:"00983D", name:"主動富邦複合收益",   co:"富邦投信",  mgr:"─",
+    cat:"bd", hasDividend:true,  freq:"m",  months:[1,2,3,4,5,6,7,8,9,10,11,12],
+    yield:null,   aum:null,  rankThis:null, rankYTD:null,
+    m1this:null,  ytd:null,  m3:null, note:"投資級債+非投資等級債，月配息"
+  }
+];
+
+const CAT_LABEL = { tw:"台灣股票", hi:"台灣高息", gl:"全球/海外", bd:"債券型" };
+const CAT_CLASS = { tw:"tw", hi:"hi", gl:"gl", bd:"bd" };
+const FREQ_LABEL = { q:"季配息", y:"年配息", h:"半年配", m:"月配息" };
+const FREQ_CLASS = { q:"q", y:"y", h:"h", m:"m" };
+
+let currentFilter = "all";
+let currentSort   = { col:"code", asc:true };
+
+function fmt(v, suffix="", dec=2) {
+  if (v === null || v === undefined) return `<span class="td-na">─</span>`;
+  const s = v >= 0 ? "+" : "";
+  return `${s}${v.toFixed(dec)}${suffix}`;
+}
+function fmtRet(v) {
+  if (v === null) return `<span class="td-na">─</span>`;
+  const cls = v > 0 ? "pos" : v < 0 ? "neg" : "neu";
+  const s = v > 0 ? "+" : "";
+  return `<span class="ret ${cls}">${s}${v.toFixed(2)}%</span>`;
+}
+function fmtYield(v) {
+  if (v === null) return `<span class="td-na">─</span>`;
+  return `<span class="yield-val">${v.toFixed(2)}%</span>`;
+}
+function fmtAUM(v) {
+  if (v === null) return `<span class="td-na">─</span>`;
+  return `<span class="td-muted" style="font-family:var(--font-num)">${v >= 1000 ? (v/100).toFixed(0)+'百億' : v.toFixed(1)}</span>`;
+}
+function fmtRank(r) {
+  if (r === null) return `<span class="td-na">─</span>`;
+  const cls = r===1?"r1":r===2?"r2":r===3?"r3":"rn";
+  return `<div class="rank-badge ${cls}">${r}</div>`;
+}
+function fmtMonths(months, freq) {
+  if (!months || !months.length) return `<span class="td-na">─</span>`;
+  if (freq === "m") return `<span class="td-muted" style="font-size:0.68rem">每月</span>`;
+  if (months.length > 6) return `<span class="td-muted" style="font-size:0.68rem">每月</span>`;
+  return `<div class="months-wrap">${months.map(m=>`<span class="month-chip">${m}月</span>`).join("")}</div>`;
+}
+
+function renderTable(data) {
+  const tbody = document.getElementById("mainTbody");
+  tbody.innerHTML = "";
+  // Section labels
+  let lastSec = null;
+  data.forEach(e => {
+    const sec = e.cat === "bd" ? "bd" : "stock";
+    if (sec !== lastSec) {
+      lastSec = sec;
+      const tr = document.createElement("tr");
+      tr.innerHTML = `<td colspan="16" class="sec-title">${sec === "bd" ? "🔵 債券型主動式ETF（D後綴）" : "🟢 股票型主動式ETF（A後綴）"}</td>`;
+      tbody.appendChild(tr);
+    }
+    const divB = e.hasDividend === null
+      ? `<span class="div-badge" style="background:rgba(90,102,128,0.1);color:var(--text-3)">待確認</span>`
+      : e.hasDividend
+        ? `<span class="div-badge yes">✓ 有配息</span>`
+        : `<span class="div-badge no">✗ 無配息</span>`;
+    const freqB = e.freq
+      ? `<span class="freq-badge ${FREQ_CLASS[e.freq]}">${FREQ_LABEL[e.freq]}</span>`
+      : `<span class="td-na">─</span>`;
+    const tr = document.createElement("tr");
+    tr.dataset.cat = e.cat;
+    tr.dataset.freq = e.freq || "";
+    tr.dataset.div  = e.hasDividend ? "1" : "0";
+    tr.innerHTML = `
+      <td class="td-code">${e.code.slice(0,5)}<span class="sfx">${e.code.slice(5)}</span></td>
+      <td><div class="td-name">${e.name}</div><div class="td-sub">${e.note || ""}</div></td>
+      <td class="td-muted">${e.co}</td>
+      <td class="td-muted" style="font-size:0.75rem">${e.mgr}</td>
+      <td class="ctr"><span class="type-badge ${CAT_CLASS[e.cat]}">${CAT_LABEL[e.cat]}</span></td>
+      <td class="ctr">${e.cat==="gl"?"🌐 全球/美國":e.cat==="bd"?"🔵 債券":"🇹🇼 台灣"}</td>
+      <td class="ctr" style="border-left:1px solid var(--border)">${divB}</td>
+      <td class="ctr">${freqB}</td>
+      <td>${fmtMonths(e.months, e.freq)}</td>
+      <td class="ctr" style="border-left:1px solid var(--border)">${fmtRank(e.rankThis)}</td>
+      <td class="ctr">${fmtRank(e.rankYTD)}</td>
+      <td class="num" style="border-left:1px solid var(--border)">${fmtRet(e.m1this)}${e.m1this!==null?'<span style="font-size:0.58rem;color:var(--text-3);margin-left:2px">★</span>':""}</td>
+      <td class="num">${fmtRet(e.ytd)}${e.ytd!==null?'<span style="font-size:0.58rem;color:var(--text-3);margin-left:2px">★</span>':""}</td>
+      <td class="num">${fmtRet(e.m3)}${e.m3!==null?'<span style="font-size:0.58rem;color:var(--text-3);margin-left:2px">★</span>':""}</td>
+      <td class="num">${fmtYield(e.yield)}</td>
+      <td class="num">${fmtAUM(e.aum)}</td>
+    `;
+    tbody.appendChild(tr);
+  });
+  document.getElementById("shownCount").textContent = data.length;
+}
+
+function renderRankings() {
+  function buildRank(id, field, suffix="%", label=null, filterFn=null) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let d = DATA.filter(x => x[field] !== null && x[field] !== undefined);
+    if (filterFn) d = d.filter(filterFn);
+    d.sort((a,b) => b[field]-a[field]);
+    const top = d.slice(0,5);
+    if (!top.length) { el.innerHTML = `<div style="font-size:0.72rem;color:var(--text-3);padding:8px 0">資料待更新</div>`; return; }
+    el.innerHTML = top.map((e,i)=>{
+      const ncls = i===0?"n1":i===1?"n2":i===2?"n3":"nx";
+      const vcls = e[field]>=0?"g":"r";
+      const v = field==="aum" ? e[field].toFixed(1)+suffix : (e[field]>=0?"+":"")+e[field].toFixed(2)+suffix;
+      const nm = e.name.replace("主動","").trim();
+      return `<div class="rank-row">
+        <div class="rank-row-left">
+          <span class="rank-num ${ncls}">${i+1}</span>
+          <div><div class="rank-code">${e.code}</div><div class="rank-name">${nm}</div></div>
+        </div>
+        <div class="rank-val ${vcls}">${v}</div>
+      </div>`;
+    }).join("");
+  }
+  buildRank("r-m1this", "m1this");
+  buildRank("r-ytd",    "ytd");
+  buildRank("r-m3",     "m3");
+  buildRank("r-yield",  "yield", "%", null, e => e.hasDividend && e.yield);
+  buildRank("r-aum",    "aum",   "億");
+}
+
+function filterAndSort() {
+  let d = [...DATA];
+  switch(currentFilter) {
+    case "tw":  d = d.filter(e=>e.cat==="tw"); break;
+    case "hi":  d = d.filter(e=>e.cat==="hi"); break;
+    case "gl":  d = d.filter(e=>e.cat==="gl"); break;
+    case "bd":  d = d.filter(e=>e.cat==="bd"); break;
+    case "div": d = d.filter(e=>e.hasDividend===true); break;
+    case "q":   d = d.filter(e=>e.freq==="q"); break;
+    case "y":   d = d.filter(e=>e.freq==="y"); break;
+  }
+  const col = currentSort.col;
+  const asc = currentSort.asc;
+  d.sort((a,b)=>{
+    let av=a[col], bv=b[col];
+    if (av===null||av===undefined) av = asc ? Infinity : -Infinity;
+    if (bv===null||bv===undefined) bv = asc ? Infinity : -Infinity;
+    if (typeof av==="string") return asc ? av.localeCompare(bv,"zh-TW") : bv.localeCompare(av,"zh-TW");
+    return asc ? av-bv : bv-av;
+  });
+  renderTable(d);
+}
+
+function applyFilter(f, btn) {
+  currentFilter = f;
+  document.querySelectorAll(".filter-btn").forEach(b=>b.classList.remove("active"));
+  btn.classList.add("active");
+  filterAndSort();
+}
+
+function applySortSel(val) {
+  currentSort.col = val;
+  currentSort.asc = val==="code";
+  filterAndSort();
+}
+
+function sortCol(col, th) {
+  if (currentSort.col===col) { currentSort.asc=!currentSort.asc; }
+  else { currentSort.col=col; currentSort.asc=(col==="code"); }
+  document.querySelectorAll("th.sortable").forEach(t=>{
+    t.classList.remove("sorted");
+    const s=t.querySelector(".sa"); if(s)s.textContent="↕";
+  });
+  th.classList.add("sorted");
+  const s=th.querySelector(".sa"); if(s)s.textContent=currentSort.asc?"↑":"↓";
+  filterAndSort();
+}
+
+function showTab(tab) {
+  const tabs = ["table","rank","reco"];
+  document.querySelectorAll(".tab-btn").forEach((b,i)=>b.classList.toggle("active",tabs[i]===tab));
+  const map = {table:"table-anchor", rank:"rank-anchor", reco:"reco-anchor"};
+  const el = document.getElementById(map[tab]);
+  if (el) el.scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+/* Init */
+renderTable(DATA);
+renderRankings();
+</script>
+</body>
+</html>
